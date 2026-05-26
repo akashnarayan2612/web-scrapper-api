@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://web-scrapper-api-m4t9.onrender.com";
+// const API_BASE = "http://localhost:8000";
 
 const NOON_COLOR = "#D4980A";
 const EMAX_COLOR = "#C0281E";
@@ -169,9 +170,7 @@ const styles = `
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    flex: 1;
     margin: 0 40px 40px;
-    overflow: hidden;
   }
 
   .table-panel {
@@ -416,6 +415,208 @@ const styles = `
   .page-btn.active { border-color: #999; color: var(--text); background: #EEECEA; }
 
   .page-info { font-size: 11px; color: var(--muted); }
+
+  /* ── Compare Button ── */
+  .compare-btn {
+    padding: 0 24px;
+    height: 48px;
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s, background 0.15s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .compare-btn:hover:not(:disabled) { opacity: 0.85; }
+  .compare-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* ── Compare Table Wrapper ── */
+  .compare-wrap {
+    margin: 0 40px 32px;
+  }
+
+  .compare-eyebrow {
+    font-size: 16px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .compare-table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: var(--surface);
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .compare-table thead tr {
+    background: #FAFAF8;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .compare-table th {
+    padding: 14px 20px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table .col-product { width: 18%; border-right: 1px solid var(--border); }
+  .compare-table .col-noon { width: 41%; border-right: 1px solid var(--border); }
+  .compare-table .col-emax { width: 41%; }
+
+  .platform-label {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .noon-label { color: var(--noon); }
+  .emax-label { color: var(--emax); }
+
+  .compare-table tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .compare-table tbody tr:last-child { border-bottom: none; }
+  .compare-table tbody tr:hover .platform-cell { background: #FAFAF8; }
+
+  .query-cell {
+    background: #FAFAF8;
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .query-keyword {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+
+  .query-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  .platform-cell {
+    padding: 14px 20px;
+    vertical-align: middle;
+    border-right: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .col-emax .platform-cell { border-right: none; }
+  .compare-table td.col-emax { border-right: none; }
+  .compare-table td.col-noon { border-right: 1px solid var(--border); }
+
+  .no-result {
+    color: var(--muted);
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .compare-cell { display: flex; flex-direction: column; gap: 8px; }
+
+  .compare-cell-top {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .compare-img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+
+  .compare-cell-info { flex: 1; min-width: 0; }
+
+  .compare-name {
+    display: block;
+    font-size: 12px;
+    color: var(--text);
+    text-decoration: none;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .compare-name:hover { color: var(--muted); }
+
+  .compare-brand {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 3px;
+  }
+
+  .compare-cell-bottom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .compare-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+  }
+
+  .compare-price.noon { color: var(--noon); }
+  .compare-price.emax { color: var(--emax); }
+
+  .compare-original {
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .compare-badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  .compare-badge.noon { background: rgba(212,152,10,0.1); color: var(--noon); }
+  .compare-badge.emax { background: rgba(192,40,30,0.1); color: var(--emax); }
 `;
 
 function useProducts(source, search, page) {
@@ -661,17 +862,49 @@ function ProductTableInner({
 
 export default function App() {
   const [search, setSearch] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState("");
+  // const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [compareQuery, setCompareQuery] = useState("");
+  const [compareResults, setCompareResults] = useState(null);
+  const [compareLoading, setCompareLoading] = useState(false);
   const stats = useStats();
-
-  // Debounce search input
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(search), 350);
-    return () => clearTimeout(t);
-  }, [search]);
 
   const noonStats = stats["noon"] || {};
   const emaxStats = stats["emax"] || {};
+
+  async function handleCompare() {
+    if (!search.trim()) return;
+    setCompareLoading(true);
+    setCompareQuery(search.trim());
+    setCompareResults(null);
+    try {
+      const [noonRes, emaxRes] = await Promise.all([
+        fetch(
+          `${API_BASE}/products?source=noon&search=${encodeURIComponent(search)}&limit=5&sort_by=price&sort_order=asc`,
+        ),
+        fetch(
+          `${API_BASE}/products?source=emax&search=${encodeURIComponent(search)}&limit=5&sort_by=price&sort_order=asc`,
+        ),
+      ]);
+      const noonData = await noonRes.json();
+      const emaxData = await emaxRes.json();
+      setCompareResults({
+        noon: noonData.results || [],
+        emax: emaxData.results || [],
+      });
+    } catch (e) {
+      setCompareResults({ noon: [], emax: [] });
+    } finally {
+      setCompareLoading(false);
+    }
+  }
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") handleCompare();
+  }
+
+  const maxRows = compareResults
+    ? Math.max(compareResults.noon.length, compareResults.emax.length, 1)
+    : 0;
 
   return (
     <>
@@ -690,23 +923,140 @@ export default function App() {
         </div>
 
         <div className="search-wrap">
-          <div className="search-inner">
-            <span className="search-icon">⌕</span>
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Search products — e.g. Samsung, iPhone, laptop..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              autoFocus
-            />
-            {search && (
-              <span className="search-count">
-                searching for "{debouncedSearch}"
-              </span>
-            )}
+          <div
+            className="search-inner"
+            style={{ maxWidth: 760, display: "flex", gap: 10 }}
+          >
+            <div style={{ position: "relative", flex: 1 }}>
+              <span className="search-icon">⌕</span>
+              <input
+                className="search-input"
+                type="text"
+                placeholder="Search laptops — e.g. Apple MacBook M4, Dell XPS..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
+                autoFocus
+              />
+              <button
+                style={{
+                  position: "absolute",
+                  right: 15,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--muted)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setSearch("");
+                  setCompareResults(null);
+                }}
+                disabled={!search.trim()}
+              >
+                ✕
+              </button>
+            </div>
+            <button
+              className="compare-btn"
+              onClick={handleCompare}
+              disabled={compareLoading || !search.trim()}
+            >
+              {compareLoading ? (
+                <span className="spinner" style={{ marginRight: 0 }} />
+              ) : (
+                "Compare →"
+              )}
+            </button>
           </div>
         </div>
+
+        {/* ── Compare Table ── */}
+        {(compareResults || compareLoading) && (
+          <div className="compare-wrap">
+            <div className="compare-eyebrow">Comparison Results</div>
+            <div className="compare-table-wrap">
+              <table className="compare-table">
+                <thead>
+                  <tr>
+                    <th className="col-product">Your Product</th>
+                    <th className="col-noon">
+                      <span className="platform-label noon-label">NOON</span>
+                    </th>
+                    <th className="col-emax">
+                      <span className="platform-label emax-label">EMAX</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {compareLoading ? (
+                    <tr>
+                      <td className="col-product query-cell">
+                        <div className="query-keyword">{search}</div>
+                      </td>
+                      <td
+                        colSpan={2}
+                        style={{
+                          textAlign: "center",
+                          color: "var(--muted)",
+                          padding: "40px 20px",
+                        }}
+                      >
+                        <span className="spinner" />
+                        comparing prices...
+                      </td>
+                    </tr>
+                  ) : (
+                    Array.from({ length: maxRows }).map((_, i) => {
+                      const noonItem = compareResults.noon[i];
+                      const emaxItem = compareResults.emax[i];
+                      return (
+                        <tr key={i}>
+                          {i === 0 && (
+                            <td
+                              className="col-product query-cell"
+                              rowSpan={maxRows}
+                            >
+                              <div className="query-keyword">
+                                "{compareQuery}"
+                              </div>
+                              <div className="query-sub">
+                                {maxRows} result{maxRows !== 1 ? "s" : ""} per
+                                platform
+                              </div>
+                            </td>
+                          )}
+                          <td className="col-noon platform-cell">
+                            {noonItem ? (
+                              <CompareProductCell
+                                item={noonItem}
+                                source="noon"
+                              />
+                            ) : (
+                              <span className="no-result">—</span>
+                            )}
+                          </td>
+                          <td className="col-emax platform-cell">
+                            {emaxItem ? (
+                              <CompareProductCell
+                                item={emaxItem}
+                                source="emax"
+                              />
+                            ) : (
+                              <span className="no-result">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         <div className="stats-bar">
           <div className="stat-pill noon">
@@ -728,24 +1078,78 @@ export default function App() {
         </div>
 
         <div className="divider" />
+        <div className="compare-eyebrow">All Products (Non-Refurbished)</div>
 
         <div className="tables-row">
           <ProductTable
             source="noon"
-            search={debouncedSearch}
+            search=""
             panelClass="panel-noon"
-            label="Noon"
             logoText="NOON"
           />
           <ProductTable
             source="emax"
-            search={debouncedSearch}
+            search=""
             panelClass="panel-emax"
-            label="Emax"
             logoText="EMAX"
           />
         </div>
       </div>
     </>
+  );
+}
+
+function CompareProductCell({ item, source }) {
+  const discount =
+    item.original_price && item.original_price > item.price
+      ? Math.round((1 - item.price / item.original_price) * 100)
+      : null;
+
+  return (
+    <div className="compare-cell">
+      <div className="compare-cell-top">
+        {item.image_url && (
+          <img
+            className="compare-img"
+            src={item.image_url}
+            alt=""
+            onError={(e) => {
+              e.target.style.display = "none";
+            }}
+          />
+        )}
+        <div className="compare-cell-info">
+          {item.product_url ? (
+            <a
+              className="compare-name"
+              href={item.product_url}
+              target="_blank"
+              rel="noreferrer"
+              title={item.name}
+            >
+              {item.name}
+            </a>
+          ) : (
+            <span className="compare-name" title={item.name}>
+              {item.name}
+            </span>
+          )}
+          {item.brand && <div className="compare-brand">{item.brand}</div>}
+        </div>
+      </div>
+      <div className="compare-cell-bottom">
+        <span className={`compare-price ${source}`}>
+          AED {item.price ? item.price.toLocaleString() : "—"}
+        </span>
+        {discount && (
+          <>
+            <span className="compare-original">
+              AED {item.original_price.toLocaleString()}
+            </span>
+            <span className={`compare-badge ${source}`}>{discount}% off</span>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

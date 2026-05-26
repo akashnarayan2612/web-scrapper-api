@@ -48,13 +48,31 @@ def get_products(
     if category:
         query["category"] = {"$regex": category, "$options": "i"}
     if search:
-        query["name"] = {"$regex": search, "$options": "i"}
+        words = [w.strip() for w in search.split() if w.strip()]
+        if words:
+            query["$and"] = [
+                {"name": {"$regex": word, "$options": "i"}}
+                for word in words
+            ]
     if min_price is not None:
         query.setdefault("price", {})["$gte"] = min_price
     if max_price is not None:
         query.setdefault("price", {})["$lte"] = max_price
     if in_stock is not None:
         query["in_stock"] = in_stock
+    # Always exclude refurbished/renewed products
+    REFURBISHED_KEYWORDS = [
+        "refurbished", "renewed", "used", "pre-owned", "open box",
+        "open-box", "preowned", "certified used"
+    ]
+    refurbished_filter = [
+        {"name": {"$not": {"$regex": kw, "$options": "i"}}}
+        for kw in REFURBISHED_KEYWORDS
+    ]
+    if "$and" in query:
+        query["$and"].extend(refurbished_filter)
+    else:
+        query["$and"] = refurbished_filter
 
     sort_dir = -1 if sort_order == "desc" else 1
     skip = (page - 1) * limit
